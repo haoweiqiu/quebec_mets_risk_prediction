@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title> Quebec Metabolic Syndrome Risk Prediction </title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	  <div class="container-fluid">
+	    <a class="navbar-brand" href="#">Quebec MetS Risk Prediction</a>
+	    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	      <span class="navbar-toggler-icon"></span>
+	    </button>
+	    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+	        <li class="nav-item">
+	          <a class="nav-link active" aria-current="page" href="/">Home</a>
+	        </li>
+	        <li class="nav-item">
+	          <a class="nav-link" href="/predict">Predict</a>
+	        </li>
+	    </div>
+	  </div>
+	</nav>
+    <style>
+        select {
+            width: 50% !important; 
+        }
+		.form-group {
+            margin-bottom: 1em;
+        }
+        .btn {
+            margin-top: 1em;
+        }
+    </style>
+
+</head>
+<body>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <div class="container">
+        <h2>Quebec Metabolic Syndrome Risk Prediction</h2>
+		<br>
+        <form id="predict-form" action="{{url_for('predict')}}" method="post">
+			<div class="form-group">
+				<label for="age_group">Your age is at range of:</label>
+				<select class="form-control" id="age_group" name="age_group">
+					<option value="0.0">18 - 24</option>
+					<option value="1.0">25 - 34</option>
+					<option value="2.0">35 - 44</option>
+					<option value="3.0">45 - 54</option>
+					<option value="4.0">55 - 64</option>
+					<option value="5.0">above 65</option>
+				</select>
+			</div>
+			<br>
+			<div class="form-group">
+				<label>Your biological sex is:</label><br>
+				<input type="radio" id="male" name="sex" value="0.0" checked>
+				<label for="male">Male</label><br>
+				<input type="radio" id="female" name="sex" value="1.0">
+				<label for="female">Female</label>
+			</div>
+			<br>
+			<div class="form-group">
+				<label for="education">What's your highest level of education:</label>
+				<select class="form-control" id="education" name="education">
+					<option value="1.0">Less than secondary school graduation</option>
+					<option value="2.0">Secondary school graduation, no post-secondary education</option>
+					<option value="3.0">Post-secondary certificate diploma or univ degree</option>
+				</select>
+			</div>
+			<br>
+			<div class="form-group">
+				<label for="marital_status">Marital Status:</label>
+				<select class="form-control" id="marital_status" name="marital_status">
+					<option value="1.0">Married/Common-Law</option>
+					<option value="2.0">Widowed/Separated/Divorced</option>
+					<option value="3.0">Single Never Married</option>
+				</select>
+			</div>
+			<br>
+            <div class="form-group">
+                <label for="smoker_type">What's your smoking status:</label>
+                <select class="form-control" id="smoker_type" name="smoker_type">
+                    <option value="1.0">Currently or Former smoker</option>
+                    <option value="2.0">Experimental smoker or Lifetime abstainer</option>
+                </select>
+				<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#smoker_type_info" aria-expanded="false" aria-controls="smoker_type_info">
+					More Info
+				</button>
+				<div class="collapse" id="smoker_type_info">
+					<div class="card card-body">
+						Experimental smoker means a person have smoked at least 1 cig. and is non-smoker now. Lifetime abstainer means a person has never smoked a whole cigarette.
+					</div>
+				</div>
+            </div>
+			<br>
+			<div class="form-group">
+				<label for="drinker_type">What's your drinker type:</label>
+				<select class="form-control" id="drinker_type" name="drinker_type">
+					<option value="1.0">Regular Drinker</option>
+					<option value="2.0">Occasional Drinker</option>
+					<option value="3.0">Non-Drinker</option>
+				</select>
+				<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#drinker_type_info" aria-expanded="false" aria-controls="drinker_type_info">
+					More Info
+				</button>
+				<div class="collapse" id="drinker_type_info">
+					<div class="card card-body">
+						Regular drinkers are those whose drinking frequencies range between every day to once a month.
+						Occasional drinkers are those whose drinking frequencies are less than once a month.
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="form-group">
+				<label for="perceived_health">In general would you say your health is:</label>
+				<select class="form-control" id="perceived_health" name="perceived_health">
+					<option value="1.0">Execellent/Very Good</option>
+					<option value="2.0">Good</option>
+					<option value="3.0">Fair/Poor</option>
+				</select>
+				<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#perceived_health_info" aria-expanded="false" aria-controls="perceived_health_info">
+					More Info
+				</button>
+				<div class="collapse" id="perceived_health_info">
+					<div class="card card-body">
+						By health, it means not only the absence of disease or injury but also physical, mental and social well-being.
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="form-group">
+				<label for="perceived_mental_health">Perceived Mental Health:</label>
+				<select class="form-control" id="perceived_mental_health" name="perceived_mental_health">
+					<option value="1.0">Execellent/Very Good</option>
+					<option value="2.0">Good</option>
+					<option value="3.0">Fair/Poor</option>
+				</select>
+				<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#perceived_mental_health_info" aria-expanded="false" aria-controls="perceived_mental_health_info">
+					More Info
+				</button>
+				<div class="collapse" id="perceived_mental_health_info">
+					<div class="card card-body">
+						This refers to your mental health status by your own judgement.
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="form-group">
+				<label for="actual_sports_ranked">How many minutes did you engage in moderte to vigorous physical activities in the past 7 days:</label>
+				<input type="range" class="form-control range-input" id="actual_sports_ranked" name="actual_sports_ranked" min="0" max="1000" step="1">
+				<span id="rangeValue">0</span> minutes
+				<br>
+				<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#physical_activities_info" aria-expanded="false" aria-controls="physical_activities_info">
+					More Info
+				</button>
+				<div class="collapse" id="physical_activities_info">
+					<div class="card card-body">
+						This refers the total number of minutes of respondent engaged in active transportation and moderate to viorous recreational and other physical activities.
+					</div>
+				</div>
+			</div>
+			<script>
+					const rangeInput = document.getElementById('actual_sports_ranked');
+					const rangeValue = document.getElementById('rangeValue');
+					rangeInput.addEventListener('input', function() {
+					rangeValue.textContent = rangeInput.value;
+				});
+			</script>
+			<style>
+				.range-input {
+				width: 50% !important;
+				}
+			</style>
+			<br>
+			<div class="form-group">
+				<label for="second_hand_smoking">Are you exposed to second hand smoking in the past month:</label>
+				<select class="form-control" id="second_hand_smoking" name="second_hand_smoking">
+					<option value="1.0">No</option>
+					<option value="2.0">Yes</option>
+				</select>
+				<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#second_hand_smoking_info" aria-expanded="false" aria-controls="second_hand_smoking_info">
+					More Info
+				</button>
+				<div class="collapse" id="second_hand_smoking_info">
+					<div class="card card-body">
+						This refers to if you are exposed to second-hand smoke at home, workplace / school, private vehicle, public places in the past month.
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="form-group">
+				<label for="life_stress">What would you say about amount of life stress in most of your days:</label>
+				<select class="form-control" id="life_stress" name="life_stress">
+					<option value="1.0">Not at all stressful</option>
+					<option value="2.0">Not very stressful</option>
+					<option value="3.0">A bit stressful</option>
+					<option value="4.0">Quite/Extrememly a bit stressful</option>
+				</select>
+			</div>
+			<br>
+			<div class="form-group">
+				<label for="life_satisfaction">What's your level of satisfaction with your life:</label>
+				<select class="form-control" id="life_satisfaction" name="life_satisfaction">
+					<option value="1.0">Very Satisfied / Satisfied</option>
+					<option value="2.0">Neutral</option>
+					<option value="3.0">Very Dissatisfied / Dissatisfied</option>
+				</select>
+			</div>
+			<br>
+			<div class="form-group">
+				<label for="balanced_food">Unable to afford balanced meals:</label>
+				<select class="form-control" id="balanced_food" name="balanced_food">
+					<option value="1.0">Often True</option>
+					<option value="2.0">Sometimes True</option>
+					<option value="3.0">Never True</option>
+				</select>
+				<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#balanced_food_info" aria-expanded="false" aria-controls="balanced_food_info">
+					More Info
+				</button>
+				<div class="collapse" id="balanced_food_info">
+					<div class="card card-body">
+						According to WHO, a balanced and healthy diet for adults includes fruit, vegetables, legumes (e.g., lentils and beans), nuts, and whole grains (e.g., unprocessed maize, millet, oats, wheat, and brown rice). It should include at least 400 g (five portions) of fruit and vegetables per day, excluding starchy roots like potatoes and cassava. Less than 10% of total energy intake should come from free sugars, ideally less than 5% for additional health benefits. Less than 30% of total energy intake should come from fats, with a preference for unsaturated fats over saturated and trans-fats. Industrially-produced trans-fats should be avoided. Lastly, salt intake should be less than 5 g (about one teaspoon) per day, and it should be iodized.
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="form-group">
+				<label for="mood_disorder">Do you have mood disorder:</label>
+				<select class="form-control" id="mood_disorder" name="mood_disorder">
+					<option value="1.0">No</option>
+					<option value="2.0">Yes</option>
+				</select>
+				<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#mood_disorder_info"
+					aria-expanded="false" aria-controls="mood_disorder_info">
+					More Info
+				</button>
+				<div class="collapse" id="mood_disorder_info">
+					<div class="card card-body">
+						Mood Disorder includes depression, bipolar, mania, dysthymia etc.
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="form-group">
+				<label for="anxiety_disorder">Do you have anxiety disorder:</label>
+				<select class="form-control" id="anxiety_disorder" name="anxiety_disorder">
+					<option value="1.0">No</option>
+					<option value="2.0">Yes</option>
+				</select>
+				<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#anxiety_disorder_info"
+					aria-expanded="false" aria-controls="anxiety_disorder_info">
+					More Info
+				</button>
+				<div class="collapse" id="anxiety_disorder_info">
+					<div class="card card-body">
+						Anxiety Disorder includes phobia, OCD, panic, etc.
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="form-group">
+				<label for="health_care_provider">Do you have a health care provider:</label>
+				<select class="form-control" id="health_care_provider" name="health_care_provider">
+					<option value="1.0">No</option>
+					<option value="2.0">Yes</option>
+				</select>
+				<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#health_care_provider_info"
+					aria-expanded="false" aria-controls="health_care_provider_info">
+					More Info
+				</button>
+				<div class="collapse" id="health_care_provider_info">
+					<div class="card card-body">
+						By this, it means one health professional that you regularly see or talk to when you need care or advice for
+						your health.
+					</div>
+				</div>
+			</div>
+			<br>
+            <button type="submit" class="btn btn-primary">Predict</button>
+        </form>
+        
+		<div id="result">
+			{% if prediction_text %}
+			<div class="alert {{ 'alert-danger' if risk_level == 'High Risk' else 'alert-success' }}" role="alert">
+				{{ prediction_text | safe }}
+			</div>
+			{% endif %}
+		</div>	
+    </div>
+	
+	<script>
+	$(document).ready(function(){
+		$('#predict-form').on('submit', function(e) {
+			e.preventDefault();
+			$.ajax({
+				url : "{{ url_for('predict') }}",
+				type : "POST",
+				contentType: 'application/json;charset=UTF-8',
+				data : JSON.stringify(Object.fromEntries(new FormData($('#predict-form')[0]))),
+				success: function(result){
+					var alertClass = result.risk_level == 'High Risk' ? 'alert-danger' : 'alert-success';
+					var resultHTML = '<div class="alert ' + alertClass + '" role="alert"><span id="typed-text"></span></div>';
+					$('#result').html(resultHTML);
+					var i = 0;
+					var txt = result.prediction_text;
+					var speed = 50;
+					function typeWriter() {
+						if (i < txt.length) {
+							if (txt.charAt(i) === '<') {
+								var endOfTag = txt.indexOf('>', i);
+								if (endOfTag > i) {
+									var tempElement = document.createElement('span');
+									tempElement.innerHTML = txt.slice(i, endOfTag + 1);
+									document.getElementById("typed-text").appendChild(tempElement);
+									i = endOfTag;
+								}
+							} else {
+							document.getElementById("typed-text").innerHTML += txt.charAt(i);
+						}
+						i++;
+						setTimeout(typeWriter, speed);
+						}
+					}
+					typeWriter();
+				},
+				error: function(error){
+					console.log(error);
+				}
+			});
+		});
+	});
+	</script>
+
+
+
+</body>
+</html>
+
